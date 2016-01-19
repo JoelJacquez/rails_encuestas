@@ -1,0 +1,9 @@
+<% if user_signed_id? %>
+  <h1>Bienvenido <%= current_user.email %></h1>
+  <%= link_to "Cerrar session", '/sessions' %> 
+<% else %>
+  <h1>Bienvenido Developer</h1>
+  <p>
+    <%= link_to "Haz click aquí", '/auth/google_oauth2' %> para iniciar session con tu cuenta de google
+  </p>
+<% end %>

@@ -1,4 +1,4 @@
-class Api::V1::MyPollsController < ApplicationController
+class Api::V1::MyPollsController < Api::V1::MasterApiController
   before_action :authenticate, only: [:create, :destroy, :update]
   before_action :set_poll, only: [:show, :update, :destroy]
   before_action(only: [:update, :destroy]) { |controllador| controllador.authenticate_owner(@poll.user) }
@@ -15,7 +15,8 @@ class Api::V1::MyPollsController < ApplicationController
     if @poll.save
       render 'api/v1/my_polls/show'
     else
-      render json: { errors: @poll.errors}, status: :unprocessable_entity
+      # render json: { errors: @poll.errors.full_messages}, status: :unprocessable_entity
+      error_array!(@poll.errors.full_messages, :unprocessable_entity)
     end
   end
 
@@ -32,12 +33,6 @@ class Api::V1::MyPollsController < ApplicationController
       render json: {message: 'Fue eliminada la encuesta indicada'}
     else
       render json: { errors: @poll.errors }, status: :unprocessable_entity
-    end
-  end
-  protected
-  def authenticate_owner(owner)
-    if owner != @current_user
-      render json: {errors: 'No tienes autorizado realizar esta accion esta encuesta'}, status: 401
     end
   end
 
